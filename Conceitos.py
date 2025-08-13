@@ -1,3 +1,5 @@
+from datetime import datetime
+
 # Classe - uma estrutura de dados personalizada usada para construir determinado objeto
 class SemDado():
     pass # caso queira criar a classe sem nenhum dado dentro
@@ -7,13 +9,16 @@ class Gato():
     # Atributo - característica particular da uma ocorrência da classe 
     # Atributo de Classe
     tipo_animal = 'Felino'
+    ano_atual = datetime.today().year
+
 
     # Método Construtor - um comportamento que inicializa atributos automaticamente
-    def __init__(self, nome):
-        self.nome = nome # g1.nome = nome_gato 
-        print(f'O nome do seu gato é {self.nome}')
+    def __init__(self, nome, idade):
+        self.nome = nome  # g1.nome = nome_gato 
+        self.idade = idade
+        print(f'O nome do seu gato é {self.nome} e ele tem {self.idade} anos')
 
-    # Método geral - um comportamento que precisa ser chamado para operar
+    # Método de Instância - um comportamento que precisa ser chamado para operar
     def peso_gato(self, peso):
         self.peso = peso
         if self.peso >= 5:
@@ -22,28 +27,29 @@ class Gato():
             print('Seu gato está normal :)')
         else:
             print('Seu gato está magrinho :(') 
-    
-    # Método Utilitário - usado para realizar tarefas específicas dentro da classe, podendo ser acessado também por outros métodos
-    def _dieta_gato(self):
-        self.status = 'Tudo certo!!'
-        if self.peso > 5:
-            self.status = 'Diminua a ração do seu felino'
-        if self.peso < 3.5:
-            self.status = 'Aumente a ração do seu felino'
-        return self.status
+
+    # Métodos Utilitários
+
+    # Método de Classe
+    @classmethod
+    def idade_gatinho(cls, nome, nasc):
+        idade = cls.ano_atual - nasc
+        return cls(nome, idade)
         
-    def formulario(self):
-        print(f'O nome do seu gatinho é {self.nome} e ele pesa {self.peso}kg')
-        print(self._dieta_gato())
-
+    # Método Estático - funciona sem o recebimento da classe ou instância
+    @staticmethod        
+    def num_aleatorio():
+        from random import randint
+        num = randint(0,10) 
+        return num
+        
 # Objeto - são instânciados por classes 
-nome_gato = str(input('Qual o nome do seu gato? '))
-g1 = Gato(nome_gato)
+g1 = Gato('kiki', 12)
+g1.peso_gato(4) # chama o método peso_gato()
 
-peso = float(input('Qual o peso do seu gatinho? '))
-g1.peso_gato(peso) # chama o método peso_gato()
-
-g1.formulario()
+# usando o método de classe
+# g1 = Gato.idade_gatinho('kiki', 2006)
+# print(g1.nome, g1.idade)
 
 # Atributos - representam os status do objeto  
 print(g1.nome) # Atributo Instância
@@ -62,16 +68,18 @@ class Teste():
         self.valor = valor
 
     # Método Getter
-    def get_valor(self):
-        return self.valor
+    @property
+    def valor(self):
+        return self._valor
     
     # Método Setter
-    def set_valor(self, nvalor):
-        self.valor = nvalor
+    @valor.setter
+    def valor(self, nvalor):
+        self._valor = nvalor # ._valor necessário para indicar que é um atributo e não entrar em loop
 
 numero = Teste(10)
-print(numero.get_valor())
+print(numero.valor) # get
 
-valor_novo = int(input('Digite um valor: '))
-numero.set_valor(valor_novo)
-print(numero.get_valor())
+
+numero.valor = 5 # set 
+print(numero.valor)
